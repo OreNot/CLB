@@ -1,0 +1,11 @@
+SYSTEM_NAME - Наименование системы
+BANK_NAME - Наименование банка
+YEAR - год
+CLIENT_NAME - НАИМЕНОВАНИЕ ОРГАНИЗАЦИИ
+GA_CLIENT_DOGOVOR_NAME - Договор между ГА и Клиентом
+GA_CLIENT_DOGOVOR_DATE - Дата договора между ГА и Клиентом
+GA_CLIENT_DOGOVOR_NUM - Номер договора между ГА и Клиентом
+REPOT_NUM - Номер заключения
+REPORT_DATE - Дата заключения
+ES_TYPE - ВИД ЭЛЕКТРОННОЙ ПОДПИСИ
+OS_NAME - Наименование ОС

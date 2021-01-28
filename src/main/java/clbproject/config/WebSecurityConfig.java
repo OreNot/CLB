@@ -1,0 +1,51 @@
+package clbproject.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import clbproject.service.UserService;
+
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value("${urlprefix}")
+    private String urlprefixPath;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                    //.antMatchers( "/login", urlprefixPath + "/login",  "/registration", urlprefixPath + "/registration", urlprefixPath + "/js", "/js",   "/localhost:8080/UC/js", "/localhost:8021/CLB/js", "/js/jquery-3.3.1.slim.min.js", "/js/popper.min.js", "/js/bootstrap.min.js", "/js/bootstrap.min.css").permitAll()
+                    .antMatchers( "/login", urlprefixPath + "/login", "CLB/login", "/registration", urlprefixPath + "/registration", urlprefixPath + "/main", urlprefixPath + "/js", "/js", urlprefixPath + "/img", "/img").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .formLogin()
+                    .loginPage("/login")
+                    .successForwardUrl("/showbanks")
+                    .defaultSuccessUrl("/showbanks")
+                    .permitAll()
+                .and()
+                    .logout()
+                    .permitAll();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService)
+                .passwordEncoder(passwordEncoder);
+    }
+}
