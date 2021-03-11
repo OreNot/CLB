@@ -113,6 +113,8 @@
 
             <br>
                 <#if document.documentfilename??>
+                <div class="jumbotron">
+                    <h4 class="display-5">Вложение</h4>
                     <div>
                     Вложение : ${document.documentfilename}
                     <br>
@@ -121,14 +123,29 @@
                         Посмотреть вложение
                     </button>
                 </div>
+                    <br>
+                    <div class="file-upload-wrapper mb-2">
+                        <input type="file"  name="file" id="input-file-now" class="file-upload"/>
+                        <label class="input-file-label" for="input-file-now">Изменить вложение</label>
+                    </div>
+
+                </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="deldoc" value="deldoc" name="deldoc">
+                        <label class="custom-control-label" for="deldoc" >Удалить вложение</label>
+                    </div>
+                    <#else>
+                        <br>
+                        <div class="file-upload-wrapper mb-2">
+                            <input type="file"  name="file" id="input-file-now" class="file-upload"/>
+                            <label class="input-file-label" for="input-file-now">Добавить вложение</label>
+                        </div>
                 </#if>
 
             </div>
 
             <button type="submit" id="submit" class="btn btn-primary mb-2">Изменить данные документа</button>
             <button class="btn btn-secondary mb-2" onclick="window.close()">Выйти без изменения</button>
-
-
 
 
             <input type="hidden" name="_csrf" value="${_csrf.token}">

@@ -88,7 +88,7 @@
 
             <div class="form-group row mt-3">
                 <div class="col-sm-3">
-                    <button class="btn btn-secondary mb-2" onclick="window.close()">Выйти без изменения</button>
+                    <button class="btn btn-secondary mb-2" onclick="window.close();window.open('${urlprefixPath}/showone${type}?id=${id}')">Выйти без изменения</button>
                 </div>
             </div>
 

@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 @Controller
 //@PreAuthorize("hasAuthority('USER')")
 public class OperatorController {
@@ -138,6 +140,9 @@ public class OperatorController {
     private static String REPORT_TEMPLATE_FILE = "C:\\reportTemplates\\report_template.docx";
     private static String REPORTS_CATALOG_NAME = "C:\\reports\\";
 
+
+    private static final Logger log = Logger.getLogger(OperatorController.class);
+
     static String username = "";
     static String password = "";
 
@@ -176,6 +181,7 @@ public class OperatorController {
                for (Document document : documentRepo.findByOrganization(organization))
                {
                    documentRepo.delete(document);
+                   log.info("Документ " + document.getDocumentName() + " №  " + document.getDocumentNumber() + " от " + document.getdocumentdate() + " удалён;");
                }
 
 
@@ -187,6 +193,7 @@ public class OperatorController {
                        armSystemNameRepo.delete(armSystemName);
                    }
                    armRepo.delete(arm);
+                   log.info("АРМ " + arm.getArmName() + " удалён;");
                }
 
                for (Contact contact : contactRepo.findByOrganization(organization))
@@ -194,6 +201,7 @@ public class OperatorController {
                    contactRepo.delete(contact);
                }
                organizationRepo.delete(organization);
+                log.info("Организация " + organization.getName() + " удалёна;");
 
                 switch (returntype) {
 
@@ -233,6 +241,7 @@ public class OperatorController {
 
 
                         antivirusRepo.delete(antivirus);
+                        log.info("Антивирус " + antivirus.getAvName() + " удалён;");
 
                         List<Antivirus> antiviruses = antivirusRepo.findAll();
 
@@ -320,13 +329,16 @@ public class OperatorController {
                         for (Document document : documentRepo.findBySzi(szi))
                         {
                             documentRepo.delete(document);
+                            log.info("Документ " + document.getDocumentName() + " №  " + document.getDocumentNumber() + " от " + document.getdocumentdate() + " удалён;");
                         }
                         List<ARMSzi> armSziList = armsziRepo.findBySzi(szi);
                         for (ARMSzi armSzi : armSziList)
                         {
                             armsziRepo.delete(armSzi);
+
                         }
                         sziRepo.delete(szi);
+                        log.info("СЗИ " + szi.getSziName() + " удалено;");
 
                         List<SZI> szis = sziRepo.findAll();
 
@@ -411,6 +423,7 @@ public class OperatorController {
                             documentRepo.deleteById(delDoc.getId());
                         }
                         pakUCRepo.delete(pakUC);
+                        log.info("ПАК УЦ " + pakUC.getPakUCName() + " удалён;");
 
                         List<PakUC> pakUCList = pakUCRepo.findAll();
 
@@ -501,6 +514,7 @@ public class OperatorController {
                         }
 
                         keyCarriersRepo.delete(kc);
+                        log.info("Ключевой носитель " + kc.getKeyCarriersName() + " удалён;");
 
                         List<KeyCarriers> keyCarriersList = keyCarriersRepo.findAll();
 
@@ -579,6 +593,7 @@ public class OperatorController {
                             documentRepo.deleteById(delDoc.getId());
                         }
                         systemRepo.deleteById(Integer.parseInt(id));
+                        log.info("Система " + systemRepo.findById(Integer.parseInt(id)).get().getSystemName() + " удалена;");
 
                         List<System> systems = systemRepo.findAll();
                         model.put("systems", systems);
@@ -597,6 +612,7 @@ public class OperatorController {
                         for(Document delDoc : documentRepo.findBySkzi(skzi))
                         {
                             documentRepo.deleteById(delDoc.getId());
+                            log.info("Документ " + documentRepo.findById(delDoc.getId()).get().getDocumentName() + " № " + documentRepo.findById(delDoc.getId()).get().getDocumentNumber() + " от " + documentRepo.findById(delDoc.getId()).get().getDocumentDate() +" удалён;");
                         }
                         List<ARMSKZI> armSkzis = armskziRepo.findBySkzi(skzi);
                         for (ARMSKZI armskzi : armSkzis)
@@ -604,6 +620,8 @@ public class OperatorController {
                             armskziRepo.delete(armskzi);
                         }
                         skziRepo.deleteById(Integer.parseInt(id));
+                        log.info("СКЗИ " + skziRepo.findById(Integer.parseInt(id)) +" удалено;");
+
 
                         List<SKZI> skzis = skziRepo.findAll();
                         model.put("skzis", skzis);
@@ -700,6 +718,7 @@ public class OperatorController {
 
 
                 armRepo.delete(arm);
+                log.info("АРМ " + arm.getArmName() +" удалён;");
 
 
                 model.put("id", returnid);
@@ -747,6 +766,7 @@ public class OperatorController {
             case "contact" :
             {
                 contactRepo.deleteById(Integer.parseInt(id));
+                log.info("Контактное лицо " + contactRepo.findById(Integer.parseInt(id)) +" удалено;");
 
                 switch (returntype)
                 {
@@ -1112,6 +1132,9 @@ public class OperatorController {
             }
 
             armRepo.save(newArm);
+            log.info("АРМ " + newArm.getArmName() + " создан;");
+            log.info("АРМу " + newArm.getArmName() + " добавлен антивирус " + antivirusRepo.findById(Integer.parseInt(antivirus)).get().getAvName() +  ";");
+            log.info("АРМу " + newArm.getArmName() + " добавлен ПАК УЦ " + pakUCRepo.findById(Integer.parseInt(pakuc)).get().getPakUCName() +  ";");
             newArm = armRepo.findByArmNameAndOrganization(newArm.getArmName(), organization);
 
             if (!szi.equals("0")) {
@@ -1120,6 +1143,7 @@ public class OperatorController {
                 ARMSzi armSzi = new ARMSzi();
                 armSzi.setArm(newArm);
                 armSzi.setSzi(sziForArm);
+                log.info("АРМу " + newArm.getArmName() + " добавлено СЗИ " + sziForArm.getSziName() +  ";");
                 armsziRepo.save(armSzi);
             }
             if (!skzi.equals("0")) {
@@ -1128,6 +1152,7 @@ public class OperatorController {
                 ARMSKZI armskzi = new ARMSKZI();
                 armskzi.setArm(newArm);
                 armskzi.setSkzi(skziForArm);
+                log.info("АРМу " + newArm.getArmName() + " добавлено СКЗИ " + skziForArm.getName() +  ";");
                 armskziRepo.save(armskzi);
             }
             if (!kc.equals("0")) {
@@ -1136,6 +1161,7 @@ public class OperatorController {
                 ARMKc armKc = new ARMKc();
                 armKc.setArm(newArm);
                 armKc.setKeyCarriers(kcForArm);
+                log.info("АРМу " + newArm.getArmName() + " добавлен ключевой носитель " + kcForArm.getKeyCarriersName() +  ";");
                 armKcRepo.save(armKc);
             }
 
@@ -1143,6 +1169,7 @@ public class OperatorController {
                 for (String sysid : sysids) {
                     ARMSystemName armSystemName = new ARMSystemName();
                     armSystemName.setArm(newArm);
+                    log.info("АРМу " + newArm.getArmName() + " добавлена система " + armSystemName +  ";");
                     armSystemName.setSystemName(systemNameRepo.findById(Integer.parseInt(sysid)).get());
                     armSystemNameRepo.save(armSystemName);
                 }
@@ -1313,6 +1340,7 @@ public class OperatorController {
 
             ARMSKZI armskzi = new ARMSKZI();
             armskzi.setArm(arm);
+            log.info("АРМу " + arm.getArmName() + " добавлено СКЗИ " + skzi.getName() +  ";");
             armskzi.setSkzi(skzi);
             armskziRepo.save(armskzi);
             model.put("error", "СЗИ  " + skzi.getName() + " для " + arm.getArmName() + " добавлено");
@@ -1371,6 +1399,7 @@ public class OperatorController {
             PakUC pakUC = pakUCRepo.findById(Integer.parseInt(pakucid)).get();
 
             arm.setPakUC(pakUC);
+            log.info("АРМу " + arm.getArmName() + " добавлен ПАК УЦ " + pakUC.getPakUCName() +  ";");
             armRepo.save(arm);
 
             model.put("error", "ПАК УЦ  " + pakUC.getPakUCName() + " для " + arm.getArmName() + " добавлен");
@@ -1429,6 +1458,7 @@ public class OperatorController {
             Antivirus antivirus = antivirusRepo.findById(Integer.parseInt(avid)).get();
 
            arm.setAntivirus(antivirus);
+           log.info("АРМу " + arm.getArmName() + " добавлен антивирус " + antivirus.getAvName() +  ";");
            armRepo.save(arm);
 
             model.put("error", "Антивирус  " + antivirus.getAvName() + " для " + arm.getArmName() + " добавлен");
@@ -1499,6 +1529,7 @@ public class OperatorController {
             ARMSzi armSzi = new ARMSzi();
             armSzi.setArm(arm);
             armSzi.setSzi(szi);
+            log.info("АРМу " + arm.getArmName() + " добавлено СЗИ " + szi.getSziName() +  ";");
             armsziRepo.save(armSzi);
             model.put("error", "СЗИ  " + szi.getSziName() + " для " + arm.getArmName() + " добавлено");
         }
@@ -1558,6 +1589,7 @@ public class OperatorController {
             ARMKc armKc = new ARMKc();
             armKc.setArm(arm);
             armKc.setKeyCarriers(keyCarriers);
+            log.info("АРМу " + arm.getArmName() + " добавлен ключевой носитель " + keyCarriers.getKeyCarriersName() +  ";");
             armKcRepo.save(armKc);
             model.put("error", "Ключевые носители " + keyCarriers.getKeyCarriersName() + " для " + arm.getArmName() + " добавлены");
         }
@@ -1652,6 +1684,8 @@ public class OperatorController {
                     }
                 }
                 keyCarriersRepo.save(newKeyCarriers);
+                log.info("Создан ключевой носитель " + newKeyCarriers.getKeyCarriersName() +  ";");
+
 
                 model.put("error", "Ключевые носители " + kcname + " добавлены");
             }
@@ -1707,6 +1741,7 @@ public class OperatorController {
                 PakUC newPakUc = new PakUC();
                 newPakUc.setPakUCName(pakucname);
                 pakUCRepo.save(newPakUc);
+                log.info("Создан ПАК УЦ " + newPakUc.getPakUCName() +  ";");
                 model.put("error", "ПАК УЦ " + pakucname + " добавлен");
             }
 
@@ -1757,6 +1792,7 @@ public class OperatorController {
                 newSZI.setSziName(sziname);
                 newSZI.setKS2(kslevel);
                 sziRepo.save(newSZI);
+                log.info("Создано СЗИ " + newSZI.getSziName() +  ";");
                 model.put("error", "СЗИ " + sziname + " добавлено");
             }
 
@@ -1813,6 +1849,7 @@ public class OperatorController {
                 newAntivirus.setAvName(avname);
                 newAntivirus.setAvVersion(avversion);
                 antivirusRepo.save(newAntivirus);
+                log.info("Создан антивирус " + newAntivirus.getAvName() + " версия " + newAntivirus.getAvVersion() +  ";");
                 model.put("error", "Антивирус " + avname + " добавлен");
             }
 
@@ -1872,6 +1909,7 @@ public class OperatorController {
 
 
                skziRepo.save(newSkzi);
+               log.info("Создано СКЗИ " + newSkzi.getName() + " версия " + newSkzi.getVersion() +  ";");
                model.put("error", "СКЗИ добавлен");
            }
 
@@ -3600,6 +3638,7 @@ public class OperatorController {
             out.close();
 
             report.setDocumentFileName(reportFile.getName());
+            log.info("Сформировано заключение на материальном носителе " + report.getDocumentName() + " № " + report.getDocumentNumber() + " от " + report.getDocumentDate() + ". имя файла - " + reportFile.getName() + ";");
 
         } catch (Exception e) {
 
@@ -4135,6 +4174,8 @@ public class OperatorController {
 
 
                 documentRepo.save(newReport);
+                log.info("Создано заключение " + newReport.getDocumentName() + " № " + newReport.getDocumentNumber() + " от " + newReport.getDocumentDate() + ";");
+
 
 
                 List<Document> documents = documentRepo.findByDocumentType(documentTypeRepo.findById(45).get());
@@ -4242,7 +4283,7 @@ public class OperatorController {
 
         //return "addreport";
     }
-
+/*
     @GetMapping("/adddocumentforsystem")
     public String adddocumentforsystem(
             @RequestParam(required = false, defaultValue = "0") String sysid,
@@ -4384,6 +4425,7 @@ public class OperatorController {
 
             newDocument.setDocumentType(documentType);
             newDocument.setSystem(system);
+            log.info("Пользователем " + user.getUsername() + " системе " + system.getSystemName() + " добавлен документ " + newDocument.getDocumentName() + " № " + newDocument.getDocumentNumber() + " от " + newDocument.getDocumentDate() + ";");
 
             documentRepo.save(newDocument);
 
@@ -4574,6 +4616,8 @@ public class OperatorController {
             }
 
             newDocument.setSkzi(skzi);
+            log.info("СКЗИ " + skzi.getName() + " добавлен документ " + newDocument.getDocumentName() + " № " + newDocument.getDocumentNumber() + " от " + newDocument.getDocumentDate() + ";");
+
 
             documentRepo.save(newDocument);
 
@@ -4617,7 +4661,7 @@ public class OperatorController {
 
         return "adddocumentforskzi";
     }
-
+*/
     @GetMapping("/adddocument")
     public String adddocument(
             @RequestParam(required = false, defaultValue = "0") String id,
@@ -4744,70 +4788,70 @@ public class OperatorController {
                     case "bank":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(1).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(1).get());
-                        objectName = organizationRepo.findById(Integer.parseInt(id)).get().getName();
+                        objectName = "Банк " + organizationRepo.findById(Integer.parseInt(id)).get().getName();
                         newDocument.setOrganization(organizationRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "organization":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(2).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(2).get());
-                        objectName = organizationRepo.findById(Integer.parseInt(id)).get().getName();
+                        objectName = "Организация " + organizationRepo.findById(Integer.parseInt(id)).get().getName();
                         newDocument.setOrganization(organizationRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "systemname":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(3).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(3).get());
-                        objectName = systemNameRepo.findById(Integer.parseInt(id)).get().getName();
+                        objectName = "Система " + systemNameRepo.findById(Integer.parseInt(id)).get().getName();
                         newDocument.setSystemName(systemNameRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "system":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(3).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(3).get());
-                        objectName = systemRepo.findById(Integer.parseInt(id)).get().getName();
+                        objectName = "Система " + systemRepo.findById(Integer.parseInt(id)).get().getName();
                         newDocument.setSystem(systemRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "skzi":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(4).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(4).get());
-                        objectName = skziRepo.findById(Integer.parseInt(id)).get().getName();
+                        objectName = "СКЗИ " + skziRepo.findById(Integer.parseInt(id)).get().getName();
                         newDocument.setSkzi(skziRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "antivirus":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(6).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(6).get());
-                        objectName = antivirusRepo.findById(Integer.parseInt(id)).get().getAvName();
+                        objectName = "Антивирус " + antivirusRepo.findById(Integer.parseInt(id)).get().getAvName();
                         newDocument.setAntivirus(antivirusRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "szi":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(8).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(8).get());
-                        objectName = sziRepo.findById(Integer.parseInt(id)).get().getSziName();
+                        objectName = "СЗИ " + sziRepo.findById(Integer.parseInt(id)).get().getSziName();
                         newDocument.setSzi(sziRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "pakuc":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(7).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(7).get());
-                        objectName = pakUCRepo.findById(Integer.parseInt(id)).get().getPakUCName();
+                        objectName = "ПАК УЦ " + pakUCRepo.findById(Integer.parseInt(id)).get().getPakUCName();
                         newDocument.setPakUC(pakUCRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "keycarriers":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(9).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(9).get());
-                        objectName = keyCarriersRepo.findById(Integer.parseInt(id)).get().getKeyCarriersName();
+                        objectName = "Ключевой носитель " + keyCarriersRepo.findById(Integer.parseInt(id)).get().getKeyCarriersName();
                         newDocument.setKeyCarriers(keyCarriersRepo.findById(Integer.parseInt(id)).get());
                         break;
 
                     case "arm":
                         documentType = documentTypeRepo.findByIdAndAffiliation(Integer.parseInt(documenttype), affilationRepo.findById(10).get());
                         documenttypes = documentTypeRepo.findByAffiliation(affilationRepo.findById(10).get());
-                        objectName = armRepo.findById(Integer.parseInt(id)).get().getArmName();
+                        objectName = "АРМ " + armRepo.findById(Integer.parseInt(id)).get().getArmName();
                         newDocument.setArm(armRepo.findById(Integer.parseInt(id)).get());
                         break;
 
@@ -4965,6 +5009,8 @@ public class OperatorController {
 
 
            documentRepo.save(newDocument);
+           log.info("Пользователем " + user.getUsername() + " для  " + objectName + " добавлен документ " + newDocument.getDocumentName() + " № " + newDocument.getDocumentNumber() + " от " + newDocument.getDocumentDate() + ";");
+
 
             model.put("error", "Документ для " + objectName + " добавлен");
         }
@@ -5120,6 +5166,8 @@ public class OperatorController {
             bank.setName(bankname);
             organizationRepo.save(bank);
             model.put("error", "Свойства банка изменены");
+            log.info("Данные банка  " + bank + " изменены;");
+
         }
         else
         {
@@ -5144,6 +5192,8 @@ public class OperatorController {
             @RequestParam(required = false, defaultValue = "0") String unlimiteddate,
             @RequestParam(required = false, defaultValue = "0") String parameters,
             @RequestParam(required = false, defaultValue = "0") String link,
+            @RequestParam(required = false, defaultValue = "0") String deldoc,
+            @RequestParam("file") MultipartFile file,
             @AuthenticationPrincipal User user,
             Map<String, Object> model)
     {
@@ -5181,6 +5231,44 @@ public class OperatorController {
         }catch (NullPointerException e)
         {
 
+        }
+/////
+        if(deldoc.equals("0")) {
+            File destFile = null;
+            if (file != null && !file.getOriginalFilename().equals("")) {
+                if (!Files.exists(Paths.get(manUpPath))) {
+                    try {
+                        Files.createDirectory(Paths.get(manUpPath));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                String dateForFileName = fileNameDateFormat.format(new Date());
+                File uploadDir = new File(manUpPath + "\\" + dateForFileName);
+
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                String newFileName = docsFileNameDateFormat.format(new Date()) + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."), file.getOriginalFilename().length());
+                destFile = new File(uploadDir + "\\" + newFileName);
+                String fileNameForBase = dateForFileName + "/" + newFileName;
+
+                try {
+                    file.transferTo(destFile);
+
+                    document.setDocumentFileName(fileNameForBase);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }
+        else
+        {
+            document.setDocumentFileName(null);
         }
 
         documentRepo.save(document);
@@ -5251,6 +5339,7 @@ public class OperatorController {
            // }
 
             contactRepo.save(newContact);
+            log.info("Создано контактное лицо " + newContact.getFio() + ";");
             model.put("error", "Контакт добавлен");
         }
         else
@@ -5571,11 +5660,105 @@ public class OperatorController {
         model.put("dbdocumentdate", dbdocumentdate);
         model.put("hostname", hostname);
         model.put("docid", docid);
-        model.put("hostname", hostname);
         model.put("urlprefixPath", urlprefixPath);
 
 
         return "showonedocument";
+    }
+
+    @GetMapping("/showonecontact")
+    public String showonecontact(
+            @RequestParam(required = false, defaultValue = "0") String id,
+            @RequestParam(required = false, defaultValue = "0") String sourcetype,
+            @RequestParam(required = false, defaultValue = "0") String sourceid,
+            @AuthenticationPrincipal User user,
+            Map<String, Object> model)
+    {
+
+        Contact contact = contactRepo.findById(Integer.parseInt(id)).get();
+
+
+
+        //model.put("urgency", urgency);
+
+        model.put("contact", contact);
+        model.put("id", id);
+        model.put("sourceid", sourceid);
+        model.put("sourcetype", sourcetype);
+        model.put("hostname", hostname);
+        model.put("urlprefixPath", urlprefixPath);
+
+
+        return "showonecontact";
+    }
+
+    @PostMapping("/showonecontact")
+    public String showonecontact(
+            @RequestParam(required = false, defaultValue = "0") String id,
+            @RequestParam(required = false, defaultValue = "0") String fio,
+            @RequestParam(required = false, defaultValue = "0") String position,
+            @RequestParam(required = false, defaultValue = "0") String phoneNumber,
+            @RequestParam(required = false, defaultValue = "0") String email,
+            @RequestParam(required = false, defaultValue = "0") String sourcetype,
+            @RequestParam(required = false, defaultValue = "0") String sourceid,
+            @AuthenticationPrincipal User user,
+            Map<String, Object> model)
+    {
+
+
+
+        Contact contact = contactRepo.findById(Integer.parseInt(id)).get();
+
+        if (fio.equals("0"))
+        {
+            model.put("contact", contact);
+            model.put("id", id);
+            model.put("hostname", hostname);
+            model.put("sourcetype", sourcetype);
+            model.put("sourceid", sourceid);
+            model.put("error", "Ф.И.О. не должно быть пустым!");
+            model.put("urlprefixPath", urlprefixPath);
+
+
+            return "showonecontact";
+        }
+
+        try {
+            contact.setFio(contact.getFio().equals(fio.trim()) ? contact.getFio() : fio.trim());
+        }catch (NullPointerException e)
+        {
+
+        }
+        try {
+            contact.setPosition(contact.getPosition().equals(position.trim()) ? contact.getPosition() : position.trim());
+        }catch (NullPointerException e)
+        {
+
+        }
+        try {
+            contact.setPhoneNumber(contact.getPhoneNumber().equals(phoneNumber.trim()) ? contact.getPhoneNumber() : phoneNumber.trim());
+        }catch (NullPointerException e)
+        {
+
+        }
+        try {
+            contact.setEmail(contact.getEmail().equals(email.trim()) ? contact.getEmail() : email.trim());
+        }catch (NullPointerException e)
+        {
+
+        }
+
+        contactRepo.save(contact);
+
+        //model.put("urgency", urgency);
+
+        model.put("contact", contact);
+        model.put("id", id);
+        model.put("hostname", hostname);
+        model.put("urlprefixPath", urlprefixPath);
+
+
+        return "showonecontact";
     }
 
 
@@ -5875,7 +6058,7 @@ public class OperatorController {
                     contactRepo.save(newContact);
                 }
 
-
+                log.info("Создана организация " + newOrganization.getName() + ";");
                 model.put("error", "Организация добавлена");
             }
             else
@@ -6000,7 +6183,7 @@ public class OperatorController {
                   newDocument.setDocumentFileName(document.getDocumentFileName());
                   documentRepo.save(newDocument);
               }
-
+              log.info("Создана система " + newSystem.getSystemName() + ";");
               model.put("error", "Система добавлена");
           }
           else
@@ -6257,6 +6440,7 @@ public class OperatorController {
                 }
 
                 organizationRepo.save(newBank);
+                log.info("Создан банк " + newBank.getName() + ";");
 
                 if (!fio.equals("0"))
                 {

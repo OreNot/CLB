@@ -6,20 +6,80 @@
 <br>
     <script src="/js/scripts.js"></script>
 <script>
-    function toggleSelect(elem) {
 
-        if(elem.value == "Выполнено")
-        {
-            document.getElementById('report').hidden = false;
-            document.getElementById('reportlabel').hidden = false;
-        }
-        else
-        {
-            document.getElementById('report').hidden = true;
-            document.getElementById('reportlabel').hidden = true;
-        }
-    }
+        // при открытии модального окна
+/*        $('#delDocModalBox').on('show.bs.modal', function (event) {
+            // получить кнопку, которая его открыло
+            alert("Launch");
+            var button = $(event.relatedTarget)
+            if (button != null)
+            {
+                alert("Launch Button ID='" + button.id + "'");
+            }
+            // извлечь информацию из атрибута data-content
+            var content = button.data('content');
+            // вывести эту информацию в элемент, имеющий id="content"
+            $(this).find('#content').text(content);
+        })
+      */
+        $('#delDocModal').on('show.bs.modal', function (event) {
+            alert("Hello! I am an alert box!!");
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var recipient = button.data('whatever'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('.modal-title').text('New message to ' + recipient);
+            modal.find('.modal-body input').val(recipient);
+        });
 </script>
+    <div class="modal fade" id="delDocModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <div class="modal fade" id="delDocModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                    <h4 class="modal-title">Заголовок модального окн11</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="content"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" >Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
 
 
 <br>
@@ -29,7 +89,6 @@
     </#if>
 </div>
 <br>
-
 
 <div class="form-row">
     <div class="form-group col-md-10">
@@ -91,7 +150,7 @@
                     <#list contacts as contact>
 
                     <tr class="table-light"
-                        onclick="window.open('${urlprefixPath}/showonecontact?id=${contact.id}')">
+                        onclick="window.close();window.open('${urlprefixPath}/showonecontact?id=${contact.id}&sourcetype=bank&sourceid=${bank.id}')">
 
                         <td>${contact.fio}</td>
                         <td><#if contact.position??>${contact.position}</#if></td>
@@ -154,14 +213,14 @@
                 <tbody>
                     <#list documents as document>
 
-                    <tr class="table-light"
-                        onclick="window.open('${urlprefixPath}/showonedocument?docid=${document.id}')" >
-                        <td><#if document.documentNumber??>${document.documentNumber}</#if></td>
+                    <tr class="table-light">
+                        <td onclick="window.open('${urlprefixPath}/showonedocument?docid=${document.id}')"><#if document.documentNumber??>${document.documentNumber}</#if></td>
                         <td>${document.documentDate}</td>
                         <td><#if document.validUntilDate != "01.01.3020">${document.validUntilDate}<#else>Бессрочно</#if></td>
                         <td><#if document.parameters != "0">${document.parameters}<#else> </#if></td>
                         <td>${document.documenttype.name}</td>
-                        <td><input type="button" class="btn btn-danger" value="Удалить" onclick="window.close(this);window.open('${urlprefixPath}/deleteelement?id=${document.id}&type=document&returntype=bank&returnid=${bank.id}')"></td>
+                        <td><input type="button" class="btn btn-danger" id="deldoc" value="Удалить" data-toggle="modal" data-target="#delDocModal" data-whatever="${urlprefixPath}/deleteelement?id=${document.id}&type=document&returntype=bank&returnid=${bank.id}"></td>
+                        <!--<td><input type="button" class="btn btn-danger" id="deldoc" value="Удалить" onclick="window.close(this);window.open('${urlprefixPath}/deleteelement?id=${document.id}&type=document&returntype=bank&returnid=${bank.id}')"></td>-->
 
                     </tr>
                     <#else>
