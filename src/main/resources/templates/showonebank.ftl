@@ -6,24 +6,7 @@
 <br>
 
     <script src="/js/scripts.js"></script>
-    <script>
-        // при открытии модального окна
-        /*        $('#delDocModalBox').on('show.bs.modal', function (event) {
-                    // получить кнопку, которая его открыло
-                    alert("Launch");
-                    var button = $(event.relatedTarget)
-                    if (button != null)
-                    {
-                        alert("Launch Button ID='" + button.id + "'");
-                    }
-                    // извлечь информацию из атрибута data-content
-                    var content = button.data('content');
-                    // вывести эту информацию в элемент, имеющий id="content"
-                    $(this).find('#content').text(content);
-                })
-              */
 
-    </script>
     <div class="modal fade" id="delDocModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
