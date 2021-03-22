@@ -22,6 +22,7 @@
     <!--
     <script src="/js/scripts.js"></script>
     -->
+
 </head>
 <body>
     <#include "navbar.ftl">

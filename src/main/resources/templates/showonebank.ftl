@@ -4,35 +4,26 @@
 <@c.page>
 
 <br>
-    <script src="/js/scripts.js"></script>
-<script>
 
+    <script src="/js/scripts.js"></script>
+    <script>
         // при открытии модального окна
-/*        $('#delDocModalBox').on('show.bs.modal', function (event) {
-            // получить кнопку, которая его открыло
-            alert("Launch");
-            var button = $(event.relatedTarget)
-            if (button != null)
-            {
-                alert("Launch Button ID='" + button.id + "'");
-            }
-            // извлечь информацию из атрибута data-content
-            var content = button.data('content');
-            // вывести эту информацию в элемент, имеющий id="content"
-            $(this).find('#content').text(content);
-        })
-      */
-        $('#delDocModal').on('show.bs.modal', function (event) {
-            alert("Hello! I am an alert box!!");
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var recipient = button.data('whatever'); // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this);
-            modal.find('.modal-title').text('New message to ' + recipient);
-            modal.find('.modal-body input').val(recipient);
-        });
-</script>
+        /*        $('#delDocModalBox').on('show.bs.modal', function (event) {
+                    // получить кнопку, которая его открыло
+                    alert("Launch");
+                    var button = $(event.relatedTarget)
+                    if (button != null)
+                    {
+                        alert("Launch Button ID='" + button.id + "'");
+                    }
+                    // извлечь информацию из атрибута data-content
+                    var content = button.data('content');
+                    // вывести эту информацию в элемент, имеющий id="content"
+                    $(this).find('#content').text(content);
+                })
+              */
+
+    </script>
     <div class="modal fade" id="delDocModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -61,25 +52,6 @@
             </div>
         </div>
     </div>
-    <!--
-    <div class="modal fade" id="delDocModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                    <h4 class="modal-title">Заголовок модального окн11</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="content"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" >Удалить</button>
-                </div>
-            </div>
-        </div>
-    </div>
--->
 
 
 <br>
@@ -235,7 +207,27 @@
     </div>
 </div>
 
-<br>
 
+
+<br>
+    <script>
+
+        alert("1!!");
+
+        var deldocModal = document.getElementById('delDocModal');
+        if (!deldocModal) {
+            throw new Error("no deldocModal object found!");
+        }
+        else {
+            alert("2!!");
+        }
+        deldocModal.addEventListener('show.bs.modal', function (event) {
+            alert("Hello! I am an alert box!!");
+            var recipient = button.getAttribute('data-bs-whatever');
+            alert(recipient);
+        });
+
+
+    </script>
 
 </@c.page>
