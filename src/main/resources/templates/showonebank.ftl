@@ -7,11 +7,11 @@
 
     <script src="/js/scripts.js"></script>
 
-    <div class="modal fade" id="delDocModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="delDocModal" tabindex="-1" role="dialog" aria-labelledby="delDocModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <h5 class="modal-title" id="delDocModalLabel">New message</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -19,23 +19,50 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="recipient-name" class="col-form-label">Удалить?</label>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-danger">Удалить</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+
+        alert("1!!");
+
+        var deldocModal = document.getElementById('delDocModal');
+        if (!deldocModal) {
+            throw new Error("no deldocModal object found!");
+        }
+        else {
+            alert("2!!");
+
+            alert(deldocModal.querySelector('.modal-title').textContent);
+
+            deldocModal.addEventListener('show.bs.modal', function (event) {
+                alert("Hello! I am an alert box!!");
+                var button = event.relatedTarget;
+                // Extract info from data-bs-* attributes
+                var recipient = button.getAttribute('data-bs-whatever');
+                // If necessary, you could initiate an AJAX request here
+                // and then do the updating in a callback.
+                //
+                // Update the modal's content.
+                var modalTitle = deldocModal.querySelector('.modal-title');
+                var modalBodyInput = deldocModal.querySelector('.modal-body label');
+
+                modalTitle.textContent = 'hello';
+                modalBodyInput.value = 'hello';
+
+            });
+        }
+
+    </script>
 
 <br>
 <div>
@@ -174,7 +201,7 @@
                         <td><#if document.validUntilDate != "01.01.3020">${document.validUntilDate}<#else>Бессрочно</#if></td>
                         <td><#if document.parameters != "0">${document.parameters}<#else> </#if></td>
                         <td>${document.documenttype.name}</td>
-                        <td><input type="button" class="btn btn-danger" id="deldoc" value="Удалить" data-toggle="modal" data-target="#delDocModal" data-whatever="${urlprefixPath}/deleteelement?id=${document.id}&type=document&returntype=bank&returnid=${bank.id}"></td>
+                        <td><button type="button" class="btn btn-danger" id="deldoc" value="Удалить" data-toggle="modal" data-target="#delDocModal" data-whatever="${urlprefixPath}/deleteelement?id=${document.id}&type=document&returntype=bank&returnid=${bank.id}">Удалить</button></td>
                         <!--<td><input type="button" class="btn btn-danger" id="deldoc" value="Удалить" onclick="window.close(this);window.open('${urlprefixPath}/deleteelement?id=${document.id}&type=document&returntype=bank&returnid=${bank.id}')"></td>-->
 
                     </tr>
@@ -193,24 +220,6 @@
 
 
 <br>
-    <script>
 
-        alert("1!!");
-
-        var deldocModal = document.getElementById('delDocModal');
-        if (!deldocModal) {
-            throw new Error("no deldocModal object found!");
-        }
-        else {
-            alert("2!!");
-        }
-        deldocModal.addEventListener('show.bs.modal', function (event) {
-            alert("Hello! I am an alert box!!");
-            var recipient = button.getAttribute('data-bs-whatever');
-            alert(recipient);
-        });
-
-
-    </script>
 
 </@c.page>
